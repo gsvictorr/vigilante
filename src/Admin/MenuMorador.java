@@ -12,35 +12,51 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.highgui.HighGui;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoCapture;
 import org.w3c.dom.css.RGBColor;
 
 
 public class MenuMorador extends javax.swing.JFrame {
 
     private File imagem;
+        private VideoCapture capture;
+    private boolean isCapturing;
  
     public MenuMorador() {
         initComponents();
         mostrarCond();
         desejaExluir.setVisible(false);
-        this.setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Imagens/iconeAdmin.png")).getImage());
+       this.setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Imagens/Icon.png")).getImage());
         txtNome.setBackground(Color.getHSBColor(204, 6, 29));
         btEditar.setVisible(false);
         cadImg.setVisible(false);
         btNovaFoto.setVisible(false);
         btSalvarImagem.setVisible(false);
+        cadWebCam.setVisible(false);
+        btFoto.setEnabled(false);
+        btFotoEditar.setEnabled(false);
     }
 
 
@@ -48,20 +64,25 @@ public class MenuMorador extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btDel = new javax.swing.JButton();
-        btCad = new javax.swing.JButton();
-        btEdit = new javax.swing.JButton();
-        cadImg = new javax.swing.JInternalFrame();
-        btCancelar = new javax.swing.JButton();
-        btCadastrar = new javax.swing.JButton();
-        btSelecionar = new javax.swing.JButton();
-        painelNovo = new javax.swing.JPanel();
-        face = new javax.swing.JLabel();
+        cadWebCam = new javax.swing.JInternalFrame();
+        painelWeb = new javax.swing.JPanel();
+        btCancelarCaptura = new javax.swing.JButton();
+        btCaptura = new javax.swing.JButton();
         desejaExluir = new javax.swing.JInternalFrame();
         btSim = new javax.swing.JButton();
         btNão = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        btDel = new javax.swing.JButton();
+        btCad = new javax.swing.JButton();
+        btEdit = new javax.swing.JButton();
+        cadImg = new javax.swing.JInternalFrame();
+        jPanel2 = new javax.swing.JPanel();
+        btCancelar = new javax.swing.JButton();
+        btCadastrar = new javax.swing.JButton();
+        painelNovo = new javax.swing.JPanel();
+        face = new javax.swing.JLabel();
+        btSelecionar = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
@@ -110,6 +131,10 @@ public class MenuMorador extends javax.swing.JFrame {
         btInserirImg = new javax.swing.JButton();
         btNovaFoto = new javax.swing.JButton();
         btExcluir = new javax.swing.JButton();
+        btFoto = new javax.swing.JButton();
+        btCriarComWebCam = new javax.swing.JButton();
+        btFotoEditar = new javax.swing.JButton();
+        btEditarComFoto = new javax.swing.JButton();
         fundo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -118,125 +143,72 @@ public class MenuMorador extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(null);
 
-        btDel.setBackground(new java.awt.Color(153, 0, 0));
-        btDel.setForeground(new java.awt.Color(153, 0, 0));
-        btDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/group_delete.png"))); // NOI18N
-        btDel.setFocusable(false);
-        btDel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btDelActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btDel);
-        btDel.setBounds(170, 10, 50, 50);
+        cadWebCam.setTitle("VIGILANTE | CADASTRO DE IMAGEM (WEBCAM)");
+        cadWebCam.setToolTipText("");
+        cadWebCam.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/camera_small.png"))); // NOI18N
+        cadWebCam.setVisible(true);
 
-        btCad.setBackground(new java.awt.Color(0, 153, 0));
-        btCad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/group_add.png"))); // NOI18N
-        btCad.setFocusable(false);
-        btCad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCadActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btCad);
-        btCad.setBounds(30, 10, 50, 50);
+        painelWeb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
 
-        btEdit.setBackground(new java.awt.Color(153, 153, 0));
-        btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/group_edit.png"))); // NOI18N
-        btEdit.setFocusable(false);
-        btEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btEditActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btEdit);
-        btEdit.setBounds(100, 10, 50, 50);
-
-        cadImg.setTitle("VIGILANTE | CADASTRO DE IMAGEM");
-        cadImg.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/camera_small.png"))); // NOI18N
-        cadImg.setVisible(true);
-
-        btCancelar.setBackground(new java.awt.Color(153, 0, 0));
-        btCancelar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        btCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btCancelar.setText("CANCELAR");
-        btCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCancelarActionPerformed(evt);
-            }
-        });
-
-        btCadastrar.setBackground(new java.awt.Color(0, 153, 0));
-        btCadastrar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        btCadastrar.setForeground(new java.awt.Color(255, 255, 255));
-        btCadastrar.setText("CADASTRAR");
-        btCadastrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCadastrarActionPerformed(evt);
-            }
-        });
-
-        btSelecionar.setBackground(new java.awt.Color(153, 153, 0));
-        btSelecionar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btSelecionar.setForeground(new java.awt.Color(0, 0, 0));
-        btSelecionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/folder_image.png"))); // NOI18N
-        btSelecionar.setText("SELECIONAR IMAGEM");
-        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSelecionarActionPerformed(evt);
-            }
-        });
-
-        painelNovo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
-
-        javax.swing.GroupLayout painelNovoLayout = new javax.swing.GroupLayout(painelNovo);
-        painelNovo.setLayout(painelNovoLayout);
-        painelNovoLayout.setHorizontalGroup(
-            painelNovoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(face, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        javax.swing.GroupLayout painelWebLayout = new javax.swing.GroupLayout(painelWeb);
+        painelWeb.setLayout(painelWebLayout);
+        painelWebLayout.setHorizontalGroup(
+            painelWebLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        painelNovoLayout.setVerticalGroup(
-            painelNovoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(face, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+        painelWebLayout.setVerticalGroup(
+            painelWebLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout cadImgLayout = new javax.swing.GroupLayout(cadImg.getContentPane());
-        cadImg.getContentPane().setLayout(cadImgLayout);
-        cadImgLayout.setHorizontalGroup(
-            cadImgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cadImgLayout.createSequentialGroup()
-                .addGroup(cadImgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(cadImgLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(btCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(cadImgLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(btCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(cadImgLayout.createSequentialGroup()
-                        .addGap(104, 104, 104)
-                        .addComponent(btSelecionar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(cadImgLayout.createSequentialGroup()
+        btCancelarCaptura.setBackground(new java.awt.Color(153, 0, 0));
+        btCancelarCaptura.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btCancelarCaptura.setForeground(new java.awt.Color(255, 255, 255));
+        btCancelarCaptura.setText("CANCELAR");
+        btCancelarCaptura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarCapturaActionPerformed(evt);
+            }
+        });
+
+        btCaptura.setBackground(new java.awt.Color(0, 204, 204));
+        btCaptura.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btCaptura.setForeground(new java.awt.Color(255, 255, 255));
+        btCaptura.setText("CAPTURAR");
+        btCaptura.setFocusPainted(false);
+        btCaptura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCapturaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cadWebCamLayout = new javax.swing.GroupLayout(cadWebCam.getContentPane());
+        cadWebCam.getContentPane().setLayout(cadWebCamLayout);
+        cadWebCamLayout.setHorizontalGroup(
+            cadWebCamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cadWebCamLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(painelNovo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(17, 17, 17))
+                .addGroup(cadWebCamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cadWebCamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btCancelarCaptura, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
+                        .addComponent(painelWeb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btCaptura, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
-        cadImgLayout.setVerticalGroup(
-            cadImgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cadImgLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(painelNovo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(btSelecionar)
-                .addGap(38, 38, 38)
-                .addComponent(btCadastrar)
+        cadWebCamLayout.setVerticalGroup(
+            cadWebCamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cadWebCamLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(painelWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btCancelar)
+                .addComponent(btCaptura, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btCancelarCaptura, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
         );
 
-        getContentPane().add(cadImg);
-        cadImg.setBounds(320, 60, 390, 530);
+        getContentPane().add(cadWebCam);
+        cadWebCam.setBounds(430, 10, 390, 610);
 
         desejaExluir.setTitle("VIGILANTE | EXCLUIR MORADOR?");
         desejaExluir.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/exclamation.png"))); // NOI18N
@@ -269,8 +241,8 @@ public class MenuMorador extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel18.setText("DESEJA EXCLUIR ESSE MORADOR(A)?");
 
-        jLabel19.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(204, 204, 0));
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(153, 0, 0));
         jLabel19.setText("LEMBRANDO QUE É PERMANENTEMENTE.");
 
         javax.swing.GroupLayout desejaExluirLayout = new javax.swing.GroupLayout(desejaExluir.getContentPane());
@@ -308,7 +280,144 @@ public class MenuMorador extends javax.swing.JFrame {
         );
 
         getContentPane().add(desejaExluir);
-        desejaExluir.setBounds(340, 230, 340, 160);
+        desejaExluir.setBounds(490, -10, 340, 161);
+
+        btDel.setBackground(new java.awt.Color(153, 0, 0));
+        btDel.setForeground(new java.awt.Color(153, 0, 0));
+        btDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/group_delete.png"))); // NOI18N
+        btDel.setFocusable(false);
+        btDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDelActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btDel);
+        btDel.setBounds(170, 10, 50, 50);
+
+        btCad.setBackground(new java.awt.Color(0, 153, 0));
+        btCad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/group_add.png"))); // NOI18N
+        btCad.setFocusable(false);
+        btCad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCadActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btCad);
+        btCad.setBounds(30, 10, 50, 50);
+
+        btEdit.setBackground(new java.awt.Color(153, 153, 0));
+        btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/group_edit.png"))); // NOI18N
+        btEdit.setFocusable(false);
+        btEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btEdit);
+        btEdit.setBounds(100, 10, 50, 50);
+
+        cadImg.setTitle("VIGILANTE | CADASTRO DE IMAGEM (ARQUIVO)");
+        cadImg.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/camera_small.png"))); // NOI18N
+        cadImg.setVisible(true);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 473, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 452, Short.MAX_VALUE)
+        );
+
+        btCancelar.setBackground(new java.awt.Color(153, 0, 0));
+        btCancelar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btCancelar.setText("CANCELAR");
+        btCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarActionPerformed(evt);
+            }
+        });
+
+        btCadastrar.setBackground(new java.awt.Color(0, 153, 0));
+        btCadastrar.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btCadastrar.setForeground(new java.awt.Color(255, 255, 255));
+        btCadastrar.setText("CADASTRAR");
+        btCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCadastrarActionPerformed(evt);
+            }
+        });
+
+        painelNovo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 102)));
+
+        javax.swing.GroupLayout painelNovoLayout = new javax.swing.GroupLayout(painelNovo);
+        painelNovo.setLayout(painelNovoLayout);
+        painelNovoLayout.setHorizontalGroup(
+            painelNovoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelNovoLayout.createSequentialGroup()
+                .addComponent(face, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        painelNovoLayout.setVerticalGroup(
+            painelNovoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(face, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        btSelecionar.setBackground(new java.awt.Color(153, 153, 0));
+        btSelecionar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btSelecionar.setForeground(new java.awt.Color(0, 0, 0));
+        btSelecionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/folder_image.png"))); // NOI18N
+        btSelecionar.setText("SELECIONAR IMAGEM");
+        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelecionarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cadImgLayout = new javax.swing.GroupLayout(cadImg.getContentPane());
+        cadImg.getContentPane().setLayout(cadImgLayout);
+        cadImgLayout.setHorizontalGroup(
+            cadImgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cadImgLayout.createSequentialGroup()
+                .addGroup(cadImgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cadImgLayout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cadImgLayout.createSequentialGroup()
+                        .addGap(98, 98, 98)
+                        .addComponent(btSelecionar))
+                    .addGroup(cadImgLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cadImgLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cadImgLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(painelNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cadImgLayout.setVerticalGroup(
+            cadImgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cadImgLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(painelNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btSelecionar)
+                .addGap(38, 38, 38)
+                .addComponent(btCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(142, 142, 142)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67))
+        );
+
+        getContentPane().add(cadImg);
+        cadImg.setBounds(20, 70, 390, 530);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(0, 102, 0));
@@ -393,7 +502,7 @@ public class MenuMorador extends javax.swing.JFrame {
         jSeparator4.setBounds(980, 150, 20, 390);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("MORADOR");
         getContentPane().add(jLabel5);
         jLabel5.setBounds(670, 140, 80, 20);
@@ -415,8 +524,9 @@ public class MenuMorador extends javax.swing.JFrame {
         getContentPane().add(txtNome);
         txtNome.setBounds(550, 190, 240, 28);
 
+        txtApto.setBackground(new java.awt.Color(0, 153, 0));
         txtApto.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        txtApto.setForeground(new java.awt.Color(0, 0, 0));
+        txtApto.setForeground(new java.awt.Color(255, 255, 255));
         txtApto.setToolTipText("APARTAMENTO");
         txtApto.setEnabled(false);
         getContentPane().add(txtApto);
@@ -437,38 +547,38 @@ public class MenuMorador extends javax.swing.JFrame {
         txtCarro2.setBounds(450, 480, 230, 28);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Apartamento");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(450, 170, 100, 20);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("RG");
         getContentPane().add(jLabel2);
         jLabel2.setBounds(450, 270, 19, 20);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("CPF");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(620, 270, 25, 20);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Nome do morador");
         getContentPane().add(jLabel4);
         jLabel4.setBounds(550, 170, 140, 20);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Veículo 2 (Marca/Modelo)");
         jLabel6.setToolTipText("");
         getContentPane().add(jLabel6);
         jLabel6.setBounds(450, 460, 180, 20);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Veículo 1 (Marca/Modelo)");
         jLabel7.setToolTipText("");
         getContentPane().add(jLabel7);
@@ -482,7 +592,7 @@ public class MenuMorador extends javax.swing.JFrame {
         txtPlaca2.setBounds(700, 480, 110, 28);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Placa veículo 2");
         jLabel8.setToolTipText("");
         getContentPane().add(jLabel8);
@@ -496,16 +606,18 @@ public class MenuMorador extends javax.swing.JFrame {
         txtPlaca1.setBounds(700, 410, 110, 28);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Placa veículo 1");
         jLabel9.setToolTipText("");
         getContentPane().add(jLabel9);
         jLabel9.setBounds(700, 390, 110, 20);
 
+        comboCond.setBackground(new java.awt.Color(1, 3, 73));
         comboCond.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        comboCond.setForeground(new java.awt.Color(0, 0, 0));
+        comboCond.setForeground(new java.awt.Color(255, 255, 255));
         comboCond.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SELECIONE O CONDOMÍNIO" }));
         comboCond.setToolTipText("SELECIONE O CONDOMÍNIO");
+        comboCond.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         getContentPane().add(comboCond);
         comboCond.setBounds(30, 90, 330, 28);
 
@@ -528,7 +640,7 @@ public class MenuMorador extends javax.swing.JFrame {
         jLabel11.setBounds(30, 70, 190, 20);
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Telefone 1");
         jLabel12.setToolTipText("");
         getContentPane().add(jLabel12);
@@ -536,7 +648,7 @@ public class MenuMorador extends javax.swing.JFrame {
 
         jLabel13.setBackground(new java.awt.Color(255, 255, 0));
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Tipo");
         jLabel13.setToolTipText("");
         getContentPane().add(jLabel13);
@@ -591,7 +703,7 @@ public class MenuMorador extends javax.swing.JFrame {
         txtTel2.setBounds(620, 350, 140, 28);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Telefone 2");
         jLabel14.setToolTipText("");
         getContentPane().add(jLabel14);
@@ -673,7 +785,7 @@ public class MenuMorador extends javax.swing.JFrame {
         painelImg.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         txtFace.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtFace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/usuario.png"))); // NOI18N
+        txtFace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/camera_small.png"))); // NOI18N
         txtFace.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtFaceMouseClicked(evt);
@@ -706,7 +818,7 @@ public class MenuMorador extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btInserirImg);
-        btInserirImg.setBounds(830, 370, 120, 27);
+        btInserirImg.setBounds(812, 370, 110, 27);
 
         btNovaFoto.setBackground(new java.awt.Color(0, 0, 102));
         btNovaFoto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -720,7 +832,7 @@ public class MenuMorador extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btNovaFoto);
-        btNovaFoto.setBounds(830, 370, 120, 27);
+        btNovaFoto.setBounds(810, 370, 110, 27);
 
         btExcluir.setBackground(new java.awt.Color(153, 0, 0));
         btExcluir.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -735,7 +847,57 @@ public class MenuMorador extends javax.swing.JFrame {
         getContentPane().add(btExcluir);
         btExcluir.setBounds(800, 550, 180, 29);
 
-        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/background.png"))); // NOI18N
+        btFoto.setBackground(new java.awt.Color(0, 153, 0));
+        btFoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/camera_small.png"))); // NOI18N
+        btFoto.setToolTipText("CAPTURAR IMAGEM - WEBCAM");
+        btFoto.setFocusPainted(false);
+        btFoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFotoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btFoto);
+        btFoto.setBounds(930, 370, 40, 26);
+
+        btCriarComWebCam.setBackground(new java.awt.Color(0, 204, 204));
+        btCriarComWebCam.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btCriarComWebCam.setForeground(new java.awt.Color(255, 255, 255));
+        btCriarComWebCam.setText("SALVAR");
+        btCriarComWebCam.setEnabled(false);
+        btCriarComWebCam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCriarComWebCamActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btCriarComWebCam);
+        btCriarComWebCam.setBounds(800, 550, 180, 29);
+
+        btFotoEditar.setBackground(new java.awt.Color(0, 153, 153));
+        btFotoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/camera_small.png"))); // NOI18N
+        btFotoEditar.setToolTipText("CAPTURAR IMAGEM - WEBCAM");
+        btFotoEditar.setFocusPainted(false);
+        btFotoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFotoEditarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btFotoEditar);
+        btFotoEditar.setBounds(930, 370, 40, 26);
+
+        btEditarComFoto.setBackground(new java.awt.Color(0, 153, 153));
+        btEditarComFoto.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        btEditarComFoto.setForeground(new java.awt.Color(255, 255, 255));
+        btEditarComFoto.setText("SALVAR");
+        btEditarComFoto.setEnabled(false);
+        btEditarComFoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditarComFotoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btEditarComFoto);
+        btEditarComFoto.setBounds(800, 550, 180, 29);
+
+        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/backG.png"))); // NOI18N
         getContentPane().add(fundo);
         fundo.setBounds(0, 0, 1030, 840);
 
@@ -825,7 +987,7 @@ public class MenuMorador extends javax.swing.JFrame {
     }//GEN-LAST:event_btCadastrarActionPerformed
 
     private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
-             cadImg.setVisible(false);
+             cadImg.dispose();
     }//GEN-LAST:event_btCancelarActionPerformed
 
     private void btNovaFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovaFotoActionPerformed
@@ -860,6 +1022,7 @@ public class MenuMorador extends javax.swing.JFrame {
        btNovaFoto.setVisible(false);
        btSalvarImagem.setVisible(false);
        btInserirImg.setVisible(true);
+       btFoto.setEnabled(true);
         }
     }//GEN-LAST:event_btCadActionPerformed
 
@@ -875,6 +1038,11 @@ public class MenuMorador extends javax.swing.JFrame {
        btExcluir.setVisible(false);
        btInserirImg.setVisible(false);
        btNovaFoto.setVisible(true);
+       txtNome.setEnabled(false);
+       txtApto.setEnabled(false);
+       btFotoEditar.setEnabled(true);
+       btFoto.setVisible(false);
+       btFotoEditar.setVisible(true);
         }
     }//GEN-LAST:event_btEditActionPerformed
 
@@ -893,6 +1061,59 @@ public class MenuMorador extends javax.swing.JFrame {
         btNovaFoto.setVisible(false);
         }
     }//GEN-LAST:event_btDelActionPerformed
+
+    private void btFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFotoActionPerformed
+       cadWebCam.setVisible(true);
+       startCapture();
+       habilitarCampos();
+       btSalvarImagem.setVisible(false);
+       btEditar.setVisible(false);
+       btSalvar.setVisible(false);
+       btInserirImg.setVisible(false);
+       btCriarComWebCam.setVisible(true);
+        
+    }//GEN-LAST:event_btFotoActionPerformed
+
+    private void btCancelarCapturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarCapturaActionPerformed
+        cadWebCam.dispose();
+        stopCapture();
+    }//GEN-LAST:event_btCancelarCapturaActionPerformed
+
+    private void btCapturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCapturaActionPerformed
+       captureImage();
+       stopCapture();
+       cadWebCam.dispose();
+       btCriarComWebCam.setEnabled(true);
+    }//GEN-LAST:event_btCapturaActionPerformed
+
+    private void btCriarComWebCamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCriarComWebCamActionPerformed
+
+        try {
+            cadastrarMoradorWebCam();
+            desabilitarCampos();
+            btCriarComWebCam.setEnabled(false);
+        } catch (IOException ex) {
+        }
+        
+    }//GEN-LAST:event_btCriarComWebCamActionPerformed
+
+    private void btFotoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFotoEditarActionPerformed
+        cadWebCam.setVisible(true);
+        btEditarComFoto.setEnabled(true);
+        btEditar.setVisible(false);
+        btCriarComWebCam.setVisible(false);
+        btSalvar.setVisible(false);
+        btSalvarImagem.setVisible(false);
+        startCapture();
+    }//GEN-LAST:event_btFotoEditarActionPerformed
+
+    private void btEditarComFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarComFotoActionPerformed
+        try {
+            editarMoradorWebCam();
+        } catch (IOException ex) {
+
+        }
+    }//GEN-LAST:event_btEditarComFotoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -930,10 +1151,16 @@ public class MenuMorador extends javax.swing.JFrame {
     private javax.swing.JButton btCad;
     private javax.swing.JButton btCadastrar;
     private javax.swing.JButton btCancelar;
+    private javax.swing.JButton btCancelarCaptura;
+    private javax.swing.JButton btCaptura;
+    private javax.swing.JButton btCriarComWebCam;
     private javax.swing.JButton btDel;
     private javax.swing.JButton btEdit;
     private javax.swing.JButton btEditar;
+    private javax.swing.JButton btEditarComFoto;
     private javax.swing.JButton btExcluir;
+    private javax.swing.JButton btFoto;
+    private javax.swing.JButton btFotoEditar;
     private javax.swing.JButton btInserirImg;
     private javax.swing.JButton btNovaFoto;
     private javax.swing.JButton btNão;
@@ -943,6 +1170,7 @@ public class MenuMorador extends javax.swing.JFrame {
     private javax.swing.JButton btSelecionar;
     private javax.swing.JButton btSim;
     private javax.swing.JInternalFrame cadImg;
+    private javax.swing.JInternalFrame cadWebCam;
     private javax.swing.JComboBox comboCond;
     private javax.swing.JComboBox<String> comboMetodos;
     private javax.swing.JComboBox comboTipo;
@@ -968,6 +1196,7 @@ public class MenuMorador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
@@ -977,6 +1206,7 @@ public class MenuMorador extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator6;
     private final javax.swing.JPanel painelImg = new javax.swing.JPanel();
     private javax.swing.JPanel painelNovo;
+    private javax.swing.JPanel painelWeb;
     private javax.swing.JTable tbMoradores;
     private javax.swing.JTextField txtApto;
     private javax.swing.JTextField txtCarro1;
@@ -1091,10 +1321,15 @@ public class MenuMorador extends javax.swing.JFrame {
         txtNome.setBackground(Color.GREEN.darker().darker());
         txtNome.setForeground(Color.BLACK);
         byte [] img = (morador.getFace());
+        if(img == null){
+        ImageIcon icone2 = new ImageIcon(getClass().getResource("/Imagens/camera_small.png"));
+        txtFace.setIcon(icone2);
+        }else{
         ImageIcon icone = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(painelImg.getWidth()-2 , painelImg.getHeight()-1, 100));
         /*ImageIcon icone = new ImageIcon(morador.getFace());
         icone.setImage(icone.getImage().getScaledInstance(painelImg.getWidth()-2 , painelImg.getHeight()-1, 100)); */
-        txtFace.setIcon(icone);
+        txtFace.setIcon(icone);   
+        }
         
         // decidindo qual tipo de morador
          switch (nivel){
@@ -1178,6 +1413,8 @@ public class MenuMorador extends javax.swing.JFrame {
             btNovaFoto.setEnabled(true);
             btEditar.setEnabled(true);
             btInserirImg.setEnabled(true);
+            btFoto.setEnabled(true);
+            
         }
         
         public void desabilitarCampos(){
@@ -1198,6 +1435,7 @@ public class MenuMorador extends javax.swing.JFrame {
             btSalvarImagem.setEnabled(false);
             btNovaFoto.setEnabled(false);
             btExcluir.setEnabled(false);
+            btFoto.setEnabled(false);
         }
         
         // cadastrar morador
@@ -1242,19 +1480,19 @@ public class MenuMorador extends javax.swing.JFrame {
         }
                         
         up.setApto(Integer.parseInt(ap));
-        up.setNome(txtNome.getText());
+        up.setNome(txtNome.getText().toUpperCase());
         up.setRg(txtRg.getText());
         up.setCpf(txtCpf.getText());
         up.setTel1(txtTel1.getText());
         up.setTel2(txtTel2.getText());
-        up.setVeiculo1(txtCarro1.getText());
-        up.setVeiculo2(txtCarro2.getText());
-        up.setPlaca1(txtPlaca1.getText());
-        up.setPlaca2(txtPlaca2.getText());
+        up.setVeiculo1(txtCarro1.getText().toUpperCase());
+        up.setVeiculo2(txtCarro2.getText().toUpperCase());
+        up.setPlaca1(txtPlaca1.getText().toUpperCase());
+        up.setPlaca2(txtPlaca2.getText().toUpperCase());
         up.setNivel(nivel);
+        up.setPertence(Integer.parseInt(id));          
         up.setFace(getFace());
-        up.setPertence(Integer.parseInt(id));
-        
+
         ConexaoMoradores cadastro = new ConexaoMoradores();
         cadastro.criarMorador(up);
         limparTabela();
@@ -1304,15 +1542,15 @@ public class MenuMorador extends javax.swing.JFrame {
         }
                         
         up.setApto(Integer.parseInt(ap));
-        up.setNome(txtNome.getText());
+        up.setNome(txtNome.getText().toUpperCase());
         up.setRg(txtRg.getText());
         up.setCpf(txtCpf.getText());
         up.setTel1(txtTel1.getText());
         up.setTel2(txtTel2.getText());
-        up.setVeiculo1(txtCarro1.getText());
-        up.setVeiculo2(txtCarro2.getText());
-        up.setPlaca1(txtPlaca1.getText());
-        up.setPlaca2(txtPlaca2.getText());
+        up.setVeiculo1(txtCarro1.getText().toUpperCase());
+        up.setVeiculo2(txtCarro2.getText().toUpperCase());
+        up.setPlaca1(txtPlaca1.getText().toUpperCase());
+        up.setPlaca2(txtPlaca2.getText().toUpperCase());
         up.setNivel(nivel);
         up.setPertence(Integer.parseInt(id)); 
         ConexaoMoradores editar = new ConexaoMoradores();
@@ -1339,7 +1577,7 @@ public class MenuMorador extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Dados inválidos. Selecione o condomínio e algum morador para excluir.");
                 desejaExluir.setVisible(false);
             } else{      
-           up.setNome(txtNome.getText());
+           up.setNome(txtNome.getText().toUpperCase());
            up.setApto(Integer.parseInt(ap));
            up.setPertence(Integer.parseInt(id));
            ConexaoMoradores excluir = new ConexaoMoradores();
@@ -1523,8 +1761,198 @@ public class MenuMorador extends javax.swing.JFrame {
         limparTabela();
         }
     }
+        
+        
+   private void startCapture() {
+    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    capture = new VideoCapture(0);
+
+    if (capture.isOpened()) {
+        isCapturing = true;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Mat frame = new Mat();
+                while (isCapturing) {
+                    capture.read(frame);
+                    if (!frame.empty()) {
+                        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2RGB);
+                        ArrayList<Mat> channels = new ArrayList<>();
+                        Core.split(frame, channels);
+                        Core.merge(new ArrayList<>(Arrays.asList(channels.get(2), channels.get(1), channels.get(0))), frame);
+                        BufferedImage image = (BufferedImage) HighGui.toBufferedImage(frame);
+                        painelWeb.getGraphics().drawImage(image, 0, 0, null);
+                    }
+                }
+            }
+        }).start();
+    }
+}
+
+    
+    private void stopCapture() {
+        isCapturing = false;
+        capture.release();
+    }
+    
+    private void captureImage() {
+        Mat frame = new Mat();
+        capture.read(frame);
+        if (!frame.empty()) {
+            Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2RGB);
+            ArrayList<Mat> channels = new ArrayList<>();
+                        Core.split(frame, channels);
+                        Core.merge(new ArrayList<>(Arrays.asList(channels.get(2), channels.get(1), channels.get(0))), frame);
+                        BufferedImage image = (BufferedImage) HighGui.toBufferedImage(frame);
+                        painelWeb.getGraphics().drawImage(image, 0, 0, null);
+        
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "jpg", baos);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        byte[] imageBytes = baos.toByteArray(); 
+          ImageIcon icone = new ImageIcon(new ImageIcon(imageBytes).getImage().getScaledInstance(painelImg.getWidth() , painelImg.getHeight(), 100));
+          txtFace.setIcon(icone);        
+        }
+        
+    }
        
-    }       
+    public byte[] getWebCam() throws IOException{
+        Icon icon = txtFace.getIcon();
+        BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+        icon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", baos);
+        return baos.toByteArray();
+    }
+    
+
+       // cadastrar morador com foto via webcam
+        public void cadastrarMoradorWebCam() throws IOException{
+        Morador up = new Morador();  
+        String escolha = comboTipo.getSelectedItem().toString();
+        String cond = comboCond.getSelectedItem().toString();
+        if(txtNome.getText().isEmpty() || txtApto.getText().isEmpty() || escolha.equals("-") || cond.equals("SELECIONE O CONDOMÍNIO")){
+                JOptionPane.showMessageDialog(null, "Dados inválidos. Selecione o condomínio, digite o nome do morador, número do apartamento e tipo de morador para cadastrar.", "VIGILANTE | ERRO AO CADASTRAR MORADOR", JOptionPane.ERROR_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/exclamation.png")));
+        } else{      
+        String ap = txtApto.getText();
+        String id = txtId.getText();
+        int nivel = 0;  
+        
+        
+            if(escolha.equals("-")){
+                JOptionPane.showMessageDialog(null, "Escolha o tipo de morador");
+            }
+            if (escolha.equals("01 - PROPRIETÁRIO(A)")) {
+                nivel = 1;
+            }
+            if (escolha.equals("02 - MORADOR(A)")) {
+                nivel = 2;
+            }
+            if (escolha.equals("03 - AUTORIZADO(A)")) {
+                nivel = 3;
+            }
+                if (escolha.equals("04 - FILHO(A)")) {
+                    nivel = 4;
+                }
+                if (escolha.equals("05 - DIARISTA")) {
+                    nivel = 5;
+                }
+                    if (escolha.equals("06 - ZELADOR(A)")) {
+                        nivel = 6;
+                    }
+                    if (escolha.equals("07 - PORTEIRO(A)")) {
+                        nivel = 7;
+                    }
+                        if (escolha.equals("08 - CÔNJUGE")) {
+                            nivel = 8;
+        }
+                        
+        up.setApto(Integer.parseInt(ap));
+        up.setNome(txtNome.getText().toUpperCase());
+        up.setRg(txtRg.getText());
+        up.setCpf(txtCpf.getText());
+        up.setTel1(txtTel1.getText());
+        up.setTel2(txtTel2.getText());
+        up.setVeiculo1(txtCarro1.getText().toUpperCase());
+        up.setVeiculo2(txtCarro2.getText().toUpperCase());
+        up.setPlaca1(txtPlaca1.getText().toUpperCase());
+        up.setPlaca2(txtPlaca2.getText().toUpperCase());
+        up.setNivel(nivel);
+        up.setPertence(Integer.parseInt(id));          
+        up.setFace(getWebCam());
+        ConexaoMoradores cadastro = new ConexaoMoradores();
+        cadastro.criarMorador(up);
+        limparTabela();
+        }
+            
+        }
+    
+      public void editarMoradorWebCam() throws IOException{
+        Morador up = new Morador();
+        String escolha = comboTipo.getSelectedItem().toString();
+        String cond = comboCond.getSelectedItem().toString();
+        if(txtNome.getText().isEmpty() || txtApto.getText().isEmpty() || escolha.equals("-") || cond.equals("SELECIONE O CONDOMÍNIO")){
+                JOptionPane.showMessageDialog(null, "Dados inválidos. Selecione o condomínio, digite o nome do morador, número do apartamento e tipo de morador para editar.", "VIGILANTE | ERRO AO CADASTRAR MORADOR", JOptionPane.ERROR_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/exclamation.png")));
+        } else{      
+        String ap = txtApto.getText();
+        String id = txtId.getText();
+        int nivel = 0;  
+        
+        
+            if(escolha.equals("-")){
+                JOptionPane.showMessageDialog(null, "Escolha o tipo de morador");
+            }
+            if (escolha.equals("01 - PROPRIETÁRIO(A)")) {
+                nivel = 1;
+            }
+            if (escolha.equals("02 - MORADOR(A)")) {
+                nivel = 2;
+            }
+            if (escolha.equals("03 - AUTORIZADO(A)")) {
+                nivel = 3;
+            }
+                if (escolha.equals("04 - FILHO(A)")) {
+                    nivel = 4;
+                }
+                if (escolha.equals("05 - DIARISTA")) {
+                    nivel = 5;
+                }
+                    if (escolha.equals("06 - ZELADOR(A)")) {
+                        nivel = 6;
+                    }
+                    if (escolha.equals("07 - PORTEIRO(A)")) {
+                        nivel = 7;
+                    }
+                        if (escolha.equals("08 - CÔNJUGE")) {
+                            nivel = 8;
+        }
+                        
+        up.setApto(Integer.parseInt(ap));
+        up.setNome(txtNome.getText());
+        up.setRg(txtRg.getText());
+        up.setCpf(txtCpf.getText());
+        up.setTel1(txtTel1.getText());
+        up.setTel2(txtTel2.getText());
+        up.setVeiculo1(txtCarro1.getText());
+        up.setVeiculo2(txtCarro2.getText());
+        up.setPlaca1(txtPlaca1.getText());
+        up.setPlaca2(txtPlaca2.getText());
+        up.setFace(getWebCam());
+        up.setNivel(nivel);
+        up.setPertence(Integer.parseInt(id)); 
+        ConexaoMoradores editar = new ConexaoMoradores();
+        editar.editarMoradorComFoto(up);
+        limparTabela();
+        mostrarMoradores();
+        }
+    }
+
+
+}       
         
 
 

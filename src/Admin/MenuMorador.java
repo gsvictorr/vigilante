@@ -906,8 +906,12 @@ public class MenuMorador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkActionPerformed
- 
+        ImageIcon icon = new ImageIcon(new ImageIcon(getClass().getResource("/Imagens/camera_small.png")).getImage());
+        txtFace.setIcon(icon);
+        limparCampos();
+        desabilitarCampos();
         mostrarMoradores();
+        
     }//GEN-LAST:event_btOkActionPerformed
 
     private void tbMoradoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbMoradoresMouseClicked
@@ -1414,6 +1418,7 @@ public class MenuMorador extends javax.swing.JFrame {
             btEditar.setEnabled(true);
             btInserirImg.setEnabled(true);
             btFoto.setEnabled(true);
+            btFotoEditar.setEnabled(true);
             
         }
         
@@ -1436,6 +1441,7 @@ public class MenuMorador extends javax.swing.JFrame {
             btNovaFoto.setEnabled(false);
             btExcluir.setEnabled(false);
             btFoto.setEnabled(false);
+            btFotoEditar.setEnabled(false);
         }
         
         // cadastrar morador

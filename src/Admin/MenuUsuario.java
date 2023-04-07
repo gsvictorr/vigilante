@@ -20,7 +20,7 @@ public class MenuUsuario extends javax.swing.JFrame {
 
     public MenuUsuario() {
         initComponents();
-        this.setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Imagens/iconeAdmin.png")).getImage());
+        this.setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Imagens/Icon.png")).getImage());
         mostrarUsers();
     }
 
@@ -72,6 +72,7 @@ public class MenuUsuario extends javax.swing.JFrame {
         txtUsuario.setBounds(60, 120, 200, 28);
 
         btCadastrar.setBackground(new java.awt.Color(0, 153, 0));
+        btCadastrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btCadastrar.setForeground(new java.awt.Color(255, 255, 255));
         btCadastrar.setText("CADASTRAR");
         btCadastrar.setToolTipText("CADASTRAR USUÁRIO");
@@ -85,6 +86,7 @@ public class MenuUsuario extends javax.swing.JFrame {
         btCadastrar.setBounds(310, 250, 190, 23);
 
         btCancelar.setBackground(new java.awt.Color(153, 0, 0));
+        btCancelar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btCancelar.setText("CANCELAR");
         btCancelar.setToolTipText("CANCELAR");
@@ -242,13 +244,13 @@ public class MenuUsuario extends javax.swing.JFrame {
         jScrollPane1.setBounds(70, 320, 410, 200);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("USUÁRIOS");
         getContentPane().add(jLabel7);
         jLabel7.setBounds(130, 0, 300, 60);
 
-        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/background.png"))); // NOI18N
+        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/backG.png"))); // NOI18N
         getContentPane().add(fundo);
         fundo.setBounds(0, 0, 570, 850);
 
@@ -342,6 +344,9 @@ public class MenuUsuario extends javax.swing.JFrame {
             if(resultadologin.next()){
                 JOptionPane.showMessageDialog(null, "Usuário já cadastrado. Por favor, tente outro nome de usuário.", "VIGILANTE (ADMIN) | ERRO AO CADASTRAR USUÁRIO", JOptionPane.ERROR_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/exclamation.png")));
                 this.setVisible(true);
+            }
+            if(txtSenha.getText().length() < 8 || txtSenhaRepetida.getText().length() < 8){
+                JOptionPane.showMessageDialog(null, "A senha deve conter no mínimo 8 caracteres.", "VIGILANTE (ADMIN) | ERRO AO CADASTRAR USUÁRIO", JOptionPane.ERROR_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/exclamation.png")));
             }else{
                 salvarUsuario();
                 this.dispose();

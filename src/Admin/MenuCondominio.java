@@ -19,7 +19,7 @@ public class MenuCondominio extends javax.swing.JFrame {
     public MenuCondominio() {
         initComponents();
         mostrarCond();
-        this.setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Imagens/iconeAdmin.png")).getImage());
+       this.setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Imagens/Icon.png")).getImage());
         desabilitarCampos();
         txtNome.setBackground(Color.getHSBColor(204, 6, 29));
         btEditar.setVisible(false);
@@ -164,14 +164,16 @@ public class MenuCondominio extends javax.swing.JFrame {
         getContentPane().add(txtCep);
         txtCep.setBounds(80, 270, 110, 40);
 
+        comboCond.setBackground(new java.awt.Color(1, 3, 73));
         comboCond.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        comboCond.setForeground(new java.awt.Color(0, 0, 0));
+        comboCond.setForeground(new java.awt.Color(255, 255, 255));
         comboCond.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SELECIONE O CONDOMÍNIO" }));
+        comboCond.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         getContentPane().add(comboCond);
-        comboCond.setBounds(110, 130, 410, 27);
+        comboCond.setBounds(110, 130, 400, 27);
 
         txtId.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        txtId.setForeground(new java.awt.Color(153, 153, 153));
+        txtId.setForeground(new java.awt.Color(204, 204, 204));
         txtId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtId.setText("ID");
         getContentPane().add(txtId);
@@ -297,9 +299,9 @@ public class MenuCondominio extends javax.swing.JFrame {
         getContentPane().add(btCad);
         btCad.setBounds(250, 20, 50, 50);
 
-        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/background.png"))); // NOI18N
+        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/backG.png"))); // NOI18N
         getContentPane().add(fundo);
-        fundo.setBounds(0, 0, 700, 800);
+        fundo.setBounds(0, 0, 700, 670);
 
         pack();
         setLocationRelativeTo(null);
@@ -623,12 +625,12 @@ public class MenuCondominio extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Dados inválidos. Digite o nome do condomínio para cadastrar", "VIGILANTE | ERRO AO CADASTRAR CONDOMÍNIO", JOptionPane.ERROR_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/exclamation.png")));
         } else{      
         
-        up.setNomeCond(txtNome.getText());
+        up.setNomeCond(txtNome.getText().toUpperCase());
         up.setCep(txtCep.getText());
-        up.setComplemento(txtComplemento.getText());
+        up.setComplemento(txtComplemento.getText().toUpperCase());
         up.setNumero(txtNumero.getText());
-        up.setObs(txtObs.getText());
-        up.setEnd(txtEnd.getText());
+        up.setObs(txtObs.getText().toUpperCase());
+        up.setEnd(txtEnd.getText().toUpperCase());
         ConexaoCondominios cadastro = new ConexaoCondominios();
         cadastro.criarCond(up);
         limparCampos();

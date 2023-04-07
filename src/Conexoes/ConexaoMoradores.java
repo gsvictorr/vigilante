@@ -100,7 +100,7 @@ public class ConexaoMoradores {
 
          stm.executeUpdate();
          stm.close();
-         JOptionPane.showMessageDialog(null, "Morador cadastrado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+         JOptionPane.showMessageDialog(null, "Morador cadastrado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoMoradores: criarMorador: " + erro);
@@ -112,7 +112,7 @@ public class ConexaoMoradores {
         conexao = new ConexaoPrincipal().conectarBD();
         
         try {
-        String updateMorador = "UPDATE tb_moradores SET rg  = ?, cpf  = ?, telefone1  = ?, telefone2  = ?, nivel  = ?, veiculo1  = ?,  veiculo2  = ?, placa1  = ?, placa2 = ? WHERE nomemorador = ? AND idpertence = ? AND aptomorador = ? ";
+        String updateMorador = "UPDATE tb_moradores SET rg  = ?, cpf  = ?, telefone1  = ?, telefone2  = ?, nivel  = ?, veiculo1  = ?,  veiculo2  = ?, placa1  = ?, placa2 = ?, nomemorador = ?, aptomorador = ? WHERE nomemorador = ? AND idpertence = ? AND aptomorador = ? ";
             
         PreparedStatement stm = conexao.prepareStatement(updateMorador);
             stm.setString(1, morador.getRg());
@@ -125,11 +125,13 @@ public class ConexaoMoradores {
             stm.setString(8, morador.getPlaca1());
             stm.setString(9, morador.getPlaca2());
             stm.setString(10, morador.getNome());
-            stm.setInt(11, morador.getPertence());
-            stm.setInt(12, morador.getApto());
+            stm.setInt(11, morador.getApto());
+            stm.setString(12, morador.getNome());
+            stm.setInt(13, morador.getPertence());
+            stm.setInt(14, morador.getApto());
             stm.executeUpdate();
             stm.close();
-            JOptionPane.showMessageDialog(null, "Morador alterado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+            JOptionPane.showMessageDialog(null, "Morador alterado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoMoradores: editarMorador: " + erro);
@@ -147,7 +149,7 @@ public class ConexaoMoradores {
             stm.setInt(3, morador.getApto());
             stm.execute();
             stm.close();
-      JOptionPane.showMessageDialog(null, "Morador excluido com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+      JOptionPane.showMessageDialog(null, "Morador excluido com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoMoradores: excluirMoradores: " + erro);
@@ -177,7 +179,7 @@ public class ConexaoMoradores {
             stm.setInt(13, morador.getApto());
             stm.executeUpdate();
             stm.close();
-            JOptionPane.showMessageDialog(null, "Foto do morador alterada com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+            JOptionPane.showMessageDialog(null, "Foto do morador alterada com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoMoradores: editarMorador: " + erro);
@@ -208,5 +210,17 @@ public class ConexaoMoradores {
         PreparedStatement stm = conexao.prepareStatement(filtrar);
         ResultSet result = stm.executeQuery();
         return result;                   
-        }     
+        }
+        
+        
+        // buscando moradores pelo nome
+        public ResultSet buscarMoradoresNome(String nome, int cond) throws SQLException{
+        conexao = new ConexaoPrincipal().conectarBD();
+        String filtrar = "SELECT * FROM tb_moradores WHERE nomemorador like'%" + nome + "%' and idpertence = '" + cond + "';";
+        PreparedStatement stm = conexao.prepareStatement(filtrar);
+        ResultSet result = stm.executeQuery();
+        return result;
+        }
+        
+        
 }

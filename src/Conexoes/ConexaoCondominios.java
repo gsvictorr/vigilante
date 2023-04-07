@@ -96,7 +96,7 @@ public class ConexaoCondominios {
             stm.setString(6, cond.getNumero());
          stm.executeUpdate();
          stm.close();
-         JOptionPane.showMessageDialog(null, "Condomínio cadastrado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+         JOptionPane.showMessageDialog(null, "Condomínio cadastrado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoCondominios: criarCond: " + erro);
@@ -119,7 +119,7 @@ public class ConexaoCondominios {
             stm.setInt(7, cond.getIdCond());
             stm.executeUpdate();
             stm.close();
-            JOptionPane.showMessageDialog(null, "Condomínio alterado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+            JOptionPane.showMessageDialog(null, "Condomínio alterado com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoCondominios: editarCond: " + erro);
@@ -135,7 +135,7 @@ public class ConexaoCondominios {
             stm.setInt(1, cond.getIdCond());
             stm.execute();
             stm.close();
-      JOptionPane.showMessageDialog(null, "Condomínio excluido com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin64x64.png")));
+      JOptionPane.showMessageDialog(null, "Condomínio excluido com sucesso.", "VIGILANTE | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoCondominios: excluirCond: " + erro);

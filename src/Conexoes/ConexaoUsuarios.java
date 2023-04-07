@@ -51,7 +51,7 @@ public class ConexaoUsuarios {
             stm.setString(2, user.getUsuario());
             stm.setString(3, user.getSenha());
             stm.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso.", "VIGILANTE (ADMIN) | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/iconeAdmin.png")));
+            JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso.", "VIGILANTE (ADMIN) | SUCESSO!", JOptionPane.INFORMATION_MESSAGE,  new ImageIcon(getClass().getResource("/Imagens/Icon.png")));
         
         } catch (SQLException erro) {
         JOptionPane.showMessageDialog(null, "ConexaoUsuários: criarUsuario " + erro);
